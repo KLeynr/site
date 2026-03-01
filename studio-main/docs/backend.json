@@ -1,0 +1,64 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "Kullanıcı Profili",
+      "description": "Kullanıcının temel bilgileri ve tercihleri.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "displayName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email"]
+    },
+    "DailyLog": {
+      "title": "Günlük Kayıt",
+      "description": "Kullanıcının girdiği kategorize edilmiş günlük faaliyet notları.",
+      "type": "object",
+      "properties": {
+        "date": { "type": "string", "format": "date" },
+        "content": { "type": "string" },
+        "category": { 
+          "type": "string", 
+          "enum": ["physical", "social", "nutrition", "screen_time", "sleep"] 
+        },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["date", "content", "category"]
+    },
+    "AnalysisReport": {
+      "title": "Analiz Raporu",
+      "description": "Nöro-analiz sonuçları ve tavsiyeler.",
+      "type": "object",
+      "properties": {
+        "total_score": { "type": "number", "description": "Dopamin Endeksi (0-100)" },
+        "neuro_status": { "type": "string", "description": "Zihinsel Durum Özeti" },
+        "risk_factor": { "type": "string", "description": "Risk Analizi (Düşük, Orta, Yüksek)" },
+        "prediction": { "type": "string", "description": "Yarın Tahmini" },
+        "dominant_trend": { "type": "string", "description": "Baskın Aktivite" },
+        "advice": { "type": "string", "description": "Nöro-Koç Mesajı" },
+        "category_breakdown": { "type": "object", "description": "Aktivite Dağılımı Verileri" },
+        "last_update": { "type": "string", "format": "date-time", "description": "Son Analiz Zamanı" }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["google.com", "password", "anonymous"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Kullanıcı profil dökümanı"
+    },
+    "/users/{userId}/logs/{logId}": {
+      "schema": "DailyLog",
+      "description": "Kullanıcının kategorize edilmiş günlük kayıtları"
+    },
+    "/users/{userId}/analysis_reports/{reportId}": {
+      "schema": "AnalysisReport",
+      "description": "Sistem tarafından üretilen periyodik analiz raporları"
+    }
+  }
+}
